@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmft.slas.cmuop.mapper.ArticleStatisticMapper">
+    <resultMap id="BaseResultMap" type="com.cmft.slas.cmuop.entity.ArticleStatistic">
+        <id column="article_statistic_id" jdbcType="BIGINT" property="articleStatisticId"/>
+        <result column="article_id" jdbcType="VARCHAR" property="articleId"/>
+        <result column="like_num" jdbcType="INTEGER" property="likeNum"/>
+        <result column="enshrine_num" jdbcType="INTEGER" property="enshrineNum"/>
+        <result column="comment_num" jdbcType="INTEGER" property="commentNum"/>
+        <result column="view_num" jdbcType="INTEGER" property="viewNum"/>
+        <result column="create_operator" jdbcType="VARCHAR" property="createOperator"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_operator" jdbcType="VARCHAR" property="updateOperator"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_delete" jdbcType="TINYINT" property="isDelete"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        article_statistic_id,
+        article_id,
+        like_num,
+        enshrine_num,
+        comment_num,
+        view_num,
+        create_operator,
+        create_time,
+        update_operator,
+        update_time,
+        is_delete
+    </sql>
+
+    <sql id="pageQueryCond">
+        <if test="articleId != null">
+            and article_id = #{articleId,jdbcType=VARCHAR}
+        </if>
+        <if test="likeNum != null">
+            and like_num = #{likeNum,jdbcType=INTEGER}
+        </if>
+        <if test="enshrineNum != null">
+            and enshrine_num = #{enshrineNum,jdbcType=INTEGER}
+        </if>
+        <if test="commentNum != null">
+            and comment_num = #{commentNum,jdbcType=INTEGER}
+        </if>
+        <if test="viewNum != null">
+            and view_num = #{viewNum,jdbcType=INTEGER}
+        </if>
+        <if test="createOperator != null">
+            and create_operator = #{createOperator,jdbcType=VARCHAR}
+        </if>
+        <if test="createTimeRange != null">
+            <if test="createTimeRange.from != null">
+                and create_time <![CDATA[>=]]>
+                #{createTimeRange.to,jdbcType=TIMESTAMP}
+            </if>
+            <if test="createTimeRange.to != null">
+                and create_time <![CDATA[<=]]>
+                #{createTimeRange.to,jdbcType=TIMESTAMP}
+            </if>
+        </if>
+        <if test="updateOperator != null">
+            and update_operator = #{updateOperator,jdbcType=VARCHAR}
+        </if>
+        <if test="updateTimeRange != null">
+            <if test="updateTimeRange.from != null">
+                and update_time <![CDATA[>=]]>
+                #{updateTimeRange.to,jdbcType=TIMESTAMP}
+            </if>
+            <if test="updateTimeRange.to != null">
+                and update_time <![CDATA[<=]]>
+                #{updateTimeRange.to,jdbcType=TIMESTAMP}
+            </if>
+        </if>
+        <if test="isDelete != null">
+            and is_delete = #{isDelete,jdbcType=TINYINT}
+        </if>
+    </sql>
+    <select id="queryByCondition" resultMap="BaseResultMap"
+            parameterType="com.cmft.slas.cmuop.dto.ArticleStatisticDTO">
+        SELECT
+        <include refid="Base_Column_List"></include>
+        FROM t_article_statistic WHERE 1 = 1
+        <include refid="pageQueryCond"></include>
+    </select>
+
+    <select id="countByCondition" resultType="java.lang.Long"
+            parameterType="com.cmft.slas.cmuop.dto.ArticleStatisticDTO">
+        SELECT COUNT(1) FROM t_article_statistic WHERE 1 = 1
+        <include refid="pageQueryCond"></include>
+    </select>
+
+    <select id="queryArticleStatisticList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_article_statistic
+        WHERE is_delete = 0
+        ORDER BY article_statistic_id
+    </select>
+
+    <select id="queryUpdateTimeByMaxTime" parameterType="String" resultType="java.util.Date">
+        SELECT max(update_time) AS max_time FROM t_article_statistic where id= df
+    </select>
+
+</mapper>

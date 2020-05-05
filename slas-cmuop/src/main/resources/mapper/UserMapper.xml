@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmft.slas.cmuop.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.cmft.slas.cmuop.entity.User">
+        <id column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="uid" jdbcType="VARCHAR" property="uid"/>
+        <result column="ps_id" jdbcType="VARCHAR" property="psId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="company" jdbcType="VARCHAR" property="company"/>
+        <result column="img_url" jdbcType="VARCHAR" property="imgUrl"/>
+        <result column="create_operator" jdbcType="VARCHAR" property="createOperator"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_operator" jdbcType="VARCHAR" property="updateOperator"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_valid" jdbcType="TINYINT" property="isValid"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        user_id,
+        uid,
+        ps_id,
+        name,
+        company,
+        img_url,
+        create_operator,
+        create_time,
+        update_operator,
+        update_time,
+        is_valid
+    </sql>
+    <resultMap id="ExtendResultMap" extends="BaseResultMap"
+               type="com.cmft.slas.cmuop.dto.UserDTO">
+    </resultMap>
+
+    <sql id="pageQueryCond">
+        <if test="uid != null">
+            and uid = #{uid,jdbcType=VARCHAR}
+        </if>
+        <if test="psId != null">
+            and ps_id = #{psId,jdbcType=VARCHAR}
+        </if>
+        <if test="name != null">
+            and name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="company != null">
+            and company = #{company,jdbcType=VARCHAR}
+        </if>
+        <if test="createOperator != null">
+            and create_operator = #{createOperator,jdbcType=VARCHAR}
+        </if>
+        <if test="updateOperator != null">
+            and update_operator = #{updateOperator,jdbcType=VARCHAR}
+        </if>
+        <if test="isDelete != null">
+            and is_delete = #{isDelete,jdbcType=TINYINT}
+        </if>
+    </sql>
+    <select id="queryByCondition" resultMap="BaseResultMap"
+            parameterType="com.cmft.slas.cmuop.dto.UserDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_user WHERE 1 = 1 and is_delete = 0
+        <include refid="pageQueryCond"/>
+    </select>
+
+    <select id="countByCondition" resultType="java.lang.Long"
+            parameterType="com.cmft.slas.cmuop.dto.UserDTO">
+        SELECT COUNT(1) FROM t_user WHERE 1 = 1 and is_delete = 0
+        <include refid="pageQueryCond"/>
+    </select>
+
+    <select id="queryUserList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_user
+        WHERE is_delete = 0
+    </select>
+
+    <select id="queryUserUidList" resultType="java.lang.String">
+        select uid from t_user where is_delete = 0
+    </select>
+
+    <select id="countByDay" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM t_user
+        WHERE is_delete = 0
+        <if test="from != null">
+            AND create_time > #{from}
+        </if>
+        <if test="to != null">
+            AND #{to} > create_time
+        </if>
+    </select>
+
+    <select id="queryUserInfoByUserId" parameterType="java.lang.String" resultType="com.cmft.slas.cmuop.entity.User">
+        select user_id as uid,user_name as name,img_url as imgUrl from t_user_info where img_url not like
+        '%slas_avatar_default%' and img_url != ''
+        <if test="userId != null">
+            and user_id = #{userId,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="queryUserInfo" resultType="com.cmft.slas.cmuop.entity.User">
+        select user_id uid,user_name name,img_url imgUrl from t_user_info where img_url not like '%slas_avatar_default%'
+        and img_url != ''
+    </select>
+</mapper>

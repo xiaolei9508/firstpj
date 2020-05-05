@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmft.slas.cmuop.mapper.FieldMapper">
+    <resultMap id="BaseResultMap" type="com.cmft.slas.cmuop.entity.Field">
+        <id column="field_id" jdbcType="BIGINT" property="fieldId"/>
+        <result column="field_name" jdbcType="VARCHAR" property="fieldName"/>
+        <result column="field_code" jdbcType="VARCHAR" property="fieldCode"/>
+        <result column="parent_code" jdbcType="VARCHAR" property="parentCode"/>
+        <result column="search_words" jdbcType="VARCHAR" property="searchWords"/>
+        <result column="is_valid" jdbcType="VARCHAR" property="isValid"/>
+        <result column="create_operator" jdbcType="VARCHAR" property="createOperator"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_operator" jdbcType="VARCHAR" property="updateOperator"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        field_id,
+        field_name,
+        field_code,
+        parent_code,
+        search_words,
+        is_valid,
+        create_operator,
+        create_time,
+        update_operator,
+        update_time
+    </sql>
+    <resultMap id="ExtendResultMap" extends="BaseResultMap"
+               type="com.cmft.slas.cmuop.dto.FieldDTO">
+    </resultMap>
+
+    <sql id="pageQueryCond">
+        <if test="fieldName != null">
+            and field_name = #{fieldName,jdbcType=VARCHAR}
+        </if>
+        <if test="fieldCode != null">
+            and field_code = #{fieldCode,jdbcType=VARCHAR}
+        </if>
+        <if test="parentCode != null">
+            and parent_code = #{parentCode,jdbcType=VARCHAR}
+        </if>
+        <if test="createOperator != null">
+            and create_operator = #{createOperator,jdbcType=VARCHAR}
+        </if>
+        <if test="updateOperator != null">
+            and update_operator = #{updateOperator,jdbcType=VARCHAR}
+        </if>
+    </sql>
+    <select id="queryByCondition" resultMap="BaseResultMap"
+            parameterType="com.cmft.slas.cmuop.dto.FieldDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_field WHERE 1 = 1 and is_delete = 0
+        <include refid="pageQueryCond"/>
+    </select>
+
+    <select id="countByCondition" resultType="java.lang.Long"
+            parameterType="com.cmft.slas.cmuop.dto.FieldDTO">
+        SELECT COUNT(1) FROM t_field WHERE 1 = 1 and is_delete = 0
+        <include refid="pageQueryCond"/>
+    </select>
+
+    <select id="queryFieldList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_field
+        WHERE is_delete = 0
+        ORDER BY field_id
+    </select>
+</mapper>

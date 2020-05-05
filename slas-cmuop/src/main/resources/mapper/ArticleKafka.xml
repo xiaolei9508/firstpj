@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmft.slas.cmuop.mapper.ArticleKafkaMapper">
+	<select id ="countArticleKafka" resultType="com.cmft.slas.cmuop.dto.CountDTO">
+		SELECT count(*) as count,if_fail as code
+		FROM t_article_kafka
+		WHERE is_delete = 0
+		<if test = "from != null">
+			AND create_time > #{from}
+		</if>
+		<if test = "to != null">
+			AND #{to} > create_time
+		</if>
+		GROUP BY if_fail
+	</select>
+</mapper>

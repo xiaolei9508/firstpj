@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmft.slas.cmuop.mapper.OaAuthorityMapper">
+    <resultMap id="BaseResultMap" type="com.cmft.slas.cmuop.entity.OaAuthority">
+        <id column="oa_authority_id" jdbcType="BIGINT" property="oaAuthorityId"/>
+        <result column="uid" jdbcType="VARCHAR" property="uid"/>
+        <result column="ps_id" jdbcType="VARCHAR" property="psId"/>
+        <result column="oa_id" jdbcType="VARCHAR" property="oaId"/>
+        <result column="auth_area_id" jdbcType="VARCHAR" property="authAreaId"/>
+        <result column="auth_reader" jdbcType="VARCHAR" property="authReader"/>
+        <result column="create_operator" jdbcType="VARCHAR" property="createOperator"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_operator" jdbcType="VARCHAR" property="updateOperator"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_delete" jdbcType="TINYINT" property="isDelete"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        oa_authority_id,
+        uid,
+        ps_id,
+        oa_id,
+        auth_area_id,
+        auth_reader,
+        create_operator,
+        create_time,
+        update_operator,
+        update_time,
+        is_delete
+    </sql>
+    <resultMap id="ExtendResultMap" extends="BaseResultMap"
+               type="com.cmft.slas.cmuop.dto.OaAuthorityDTO">
+    </resultMap>
+
+    <sql id="pageQueryCond">
+        <if test="uid != null">
+            and uid = #{uid,jdbcType=VARCHAR}
+        </if>
+        <if test="psId != null">
+            and ps_id = #{psId,jdbcType=VARCHAR}
+        </if>
+        <if test="oaId != null">
+            and oa_id = #{oaId,jdbcType=VARCHAR}
+        </if>
+        <if test="authAreaId != null">
+            and auth_area_id = #{authAreaId,jdbcType=VARCHAR}
+        </if>
+        <if test="authReader != null">
+            and auth_reader = #{authReader,jdbcType=VARCHAR}
+        </if>
+        <if test="createOperator != null">
+            and create_operator = #{createOperator,jdbcType=VARCHAR}
+        </if>
+        <if test="updateOperator != null">
+            and update_operator = #{updateOperator,jdbcType=VARCHAR}
+        </if>
+        <if test="isDelete != null">
+            and is_delete = #{isDelete,jdbcType=TINYINT}
+        </if>
+    </sql>
+    <select id="queryByCondition" resultMap="BaseResultMap"
+            parameterType="com.cmft.slas.cmuop.dto.OaAuthorityDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_oa_authority WHERE 1 = 1 and is_delete = 0
+        <include refid="pageQueryCond"/>
+    </select>
+
+    <select id="countByCondition" resultType="java.lang.Long"
+            parameterType="com.cmft.slas.cmuop.dto.OaAuthorityDTO">
+        SELECT COUNT(1) FROM t_oa_authority WHERE 1 = 1 and is_delete = 0
+        <include refid="pageQueryCond"/>
+    </select>
+
+    <select id="queryOaAuthorityList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_oa_authority
+        WHERE is_delete = 0
+    </select>
+
+    <insert id="insertOaAuthorityBatch">     
+        insert into t_oa_authority (uid, ps_id, oa_id, auth_area_id, auth_reader) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.uid},#{item.psId},#{item.oaId},#{item.authAreaId},#{item.authReader})
+        </foreach>
+    </insert>
+
+    <update id="updateByUid" parameterType="java.lang.String">
+        update t_oa_authority set is_delete = 1 where uid = #{uid,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

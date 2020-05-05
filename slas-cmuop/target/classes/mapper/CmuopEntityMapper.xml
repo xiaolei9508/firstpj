@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmft.slas.cmuop.mapper.CmuopEntityMapper">
+    <resultMap id="BaseResultMap" type="com.cmft.slas.cmuop.entity.CmuopEntity">
+        <id column="entity_id" jdbcType="BIGINT" property="entityId"/>
+        <result column="entity_name" jdbcType="VARCHAR" property="entityName"/>
+        <result column="entity_code" jdbcType="VARCHAR" property="entityCode"/>
+        <result column="parent_code" jdbcType="VARCHAR" property="parentCode"/>
+        <result column="entity_code_nuc" jdbcType="VARCHAR" property="entityCodeNuc"/>
+        <result column="search_words" jdbcType="VARCHAR" property="searchWords"/>
+        <result column="industry_id" jdbcType="VARCHAR" property="industryId"/>
+        <result column="order_num" jdbcType="INTEGER" property="orderNum"/>
+        <result column="create_operator" jdbcType="VARCHAR" property="createOperator"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_operator" jdbcType="VARCHAR" property="updateOperator"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_valid" jdbcType="TINYINT" property="isValid"/>
+        <result column="if_cmuop" jdbcType="TINYINT" property="ifCmuop"/>
+        <result column="from_nuc" jdbcType="TINYINT" property="fromNuc"/>
+        <result column="industry_id" jdbcType="VARCHAR" property="industryId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        entity_id,
+        entity_name,
+        entity_code,
+        parent_code,
+        entity_code_nuc,
+        search_words,
+        industry_id,
+        order_num,
+        create_operator,
+        create_time,
+        update_operator,
+        update_time,
+        is_valid,
+        if_cmuop,
+        from_nuc
+    </sql>
+    <resultMap id="ExtendResultMap" extends="BaseResultMap"
+               type="com.cmft.slas.cmuop.dto.CmuopEntityDTO">
+    </resultMap>
+
+    <sql id="pageQueryCond">
+        <if test="entityName != null">
+            and entity_name = #{entityName,jdbcType=VARCHAR}
+        </if>
+        <if test="entityCode != null">
+            and entity_code = #{entityCode,jdbcType=VARCHAR}
+        </if>
+        <if test="parentCode != null">
+            and parent_code = #{parentCode,jdbcType=VARCHAR}
+        </if>
+        <if test="entityCodeNuc != null">
+            and entity_code_nuc = #{entityCodeNuc,jdbcType=VARCHAR}
+        </if>
+        <if test="ifCmuop != null">
+            and if_cmuop = #{ifCmuop,jdbcType=TINYINT}
+        </if>
+        <if test="fromNuc != null">
+            and from_nuc = #{fromNuc,jdbcType=TINYINT}
+        </if>
+        <if test="industryId != null">
+            and industry_id = #{industryId,jdbcType=VARCHAR}
+        </if>
+        <if test="createOperator != null">
+            and create_operator = #{createOperator,jdbcType=VARCHAR}
+        </if>
+        <if test="updateOperator != null">
+            and update_operator = #{updateOperator,jdbcType=VARCHAR}
+        </if>
+        <if test="isDelete != null">
+            and is_delete = #{isDelete,jdbcType=TINYINT}
+        </if>
+        <if test="ifCmuop != null">
+            and if_cmuop = #{ifCmuop,jdbcType=TINYINT}
+        </if>
+        <if test="isValid != null">
+            and is_valid = #{isValid,jdbcType=TINYINT}
+        </if>
+    </sql>
+    <select id="queryByCondition" resultMap="BaseResultMap"
+            parameterType="com.cmft.slas.cmuop.dto.CmuopEntityDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_cmuop_entity WHERE is_delete = 0
+        <include refid="pageQueryCond"/>
+        ORDER BY order_num ASC 
+    </select>
+
+    <select id="countByCondition" resultType="java.lang.Long"
+            parameterType="com.cmft.slas.cmuop.dto.CmuopEntityDTO">
+        SELECT COUNT(1) FROM t_cmuop_entity WHERE is_delete = 0
+        <include refid="pageQueryCond"/>
+    </select>
+
+    <select id="queryCmuopEntityList" parameterType="com.cmft.slas.cmuop.dto.CmuopEntityDTO" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_cmuop_entity
+        WHERE is_delete = 0
+        <include refid="pageQueryCond"/>
+    </select>
+
+    <select id="queryEntityNameByEntityCode" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT entity_name as entityName FROM t_cmuop_entity where is_delete = 0
+        <if test="entityCode != null">
+            and entity_code = #{entityCode,jdbcType=VARCHAR}
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmft.slas.cmuop.mapper.UserLikeCommentMapper">
+	<resultMap id="BaseResultMap" type="com.cmft.slas.cmuop.entity.UserLikeComment">
+    	<id column="user_like_id" jdbcType="BIGINT" property="userLikeId" />
+    	<result column="article_id" jdbcType="VARCHAR" property="articleId" />
+    	<result column="uid" jdbcType="VARCHAR" property="uid" />
+    	<result column="type" jdbcType="TINYINT" property="type" />
+    	<result column="create_operator" jdbcType="VARCHAR" property="createOperator" />
+    	<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    	<result column="update_operator" jdbcType="VARCHAR" property="updateOperator" />
+    	<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    	<result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+  	</resultMap>
+	<sql id="Base_Column_List">
+    	user_like_id,
+    	article_id,
+    	uid,
+    	type,
+    	create_operator,
+    	create_time,
+    	update_operator,
+    	update_time,
+    	is_delete
+  	</sql>
+	<resultMap id="ExtendResultMap" extends="BaseResultMap"
+		type="com.cmft.slas.cmuop.dto.UserLikeCommentDTO">
+
+	</resultMap>
+
+	<sql id="pageQueryCond">
+		<if test="articleId != null">
+		and article_id = #{articleId,jdbcType=VARCHAR}
+		</if>
+		<if test="uid != null">
+		and uid = #{uid,jdbcType=VARCHAR}
+		</if>
+		<if test="type != null">
+		and type = #{type,jdbcType=TINYINT}
+		</if>
+		<if test="createOperator != null">
+		and create_operator = #{createOperator,jdbcType=VARCHAR}
+		</if>
+		 <if test="createTimeRange != null">
+			<if test="createTimeRange.from != null">
+				and create_time <![CDATA[>=]]>
+				#{createTimeRange.to,jdbcType=TIMESTAMP}
+			</if>
+			<if test="createTimeRange.to != null">
+				and create_time <![CDATA[<=]]>
+				#{createTimeRange.to,jdbcType=TIMESTAMP}
+			</if>
+		</if>
+		<if test="updateOperator != null">
+		and update_operator = #{updateOperator,jdbcType=VARCHAR}
+		</if>
+		 <if test="updateTimeRange != null">
+			<if test="updateTimeRange.from != null">
+				and update_time <![CDATA[>=]]>
+				#{updateTimeRange.to,jdbcType=TIMESTAMP}
+			</if>
+			<if test="updateTimeRange.to != null">
+				and update_time <![CDATA[<=]]>
+				#{updateTimeRange.to,jdbcType=TIMESTAMP}
+			</if>
+		</if>
+		<if test="isDelete != null">
+		and is_delete = #{isDelete,jdbcType=TINYINT}
+		</if>
+	</sql>
+	<select id="queryByCondition" resultMap="BaseResultMap"
+		parameterType="com.cmft.slas.cmuop.dto.UserLikeCommentDTO">
+		SELECT
+		<include refid="Base_Column_List"></include>
+		FROM t_user_like_comment WHERE 1 = 1
+		<include refid="pageQueryCond"></include>
+	</select>
+
+	<select id="countByCondition" resultType="java.lang.Long"
+		parameterType="com.cmft.slas.cmuop.dto.UserLikeCommentDTO">
+		SELECT COUNT(1) FROM t_user_like_comment WHERE 1 = 1
+		<include refid="pageQueryCond"></include>
+	</select>
+	
+	<select id="queryUserLikeCommentList" resultMap="BaseResultMap">
+	  	SELECT 
+	  	<include refid="Base_Column_List" />
+	  	FROM t_user_like_comment
+	  	WHERE is_delete = 0
+	  	ORDER BY user_like_id
+  	</select>
+
+	<select id="ifUserLikeComment" resultType="java.lang.Integer">
+		select ifnull(sum(type), 0) as count
+		from t_user_like_comment
+		where 1=1 and is_delete = 0
+		<if test="articleId != null">
+			and article_id = #{articleId,jdbcType=VARCHAR}
+		</if>
+		<if test="commentId != null">
+			and comment_id = #{commentId,jdbcType=VARCHAR}
+		</if>
+		<if test="uid != null">
+			and uid = #{uid,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="queryByComment" resultMap="BaseResultMap">
+		SELECT comment_id,type FROM t_user_like_comment
+		WHERE is_delete = 0
+		<if test="previousFireTime != null">
+			and update_time > #{previousFireTime}
+		</if>
+		<if test="fireTime != null">
+			and #{fireTime} > update_time
+		</if>
+	</select>
+	<select id="getAllLikesForComment" resultType="com.cmft.slas.cmuop.entity.UserLikeComment">
+		SELECT uid
+		FROM t_user_like_comment
+		WHERE comment_id = #{commentId}
+		GROUP BY uid
+		HAVING sum(type) > 0
+	</select>
+</mapper>

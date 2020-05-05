@@ -1,0 +1,688 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmft.slas.cmuop.mapper.ArticleMapper">
+	<resultMap id="BaseResultMap" type="com.cmft.slas.cmuop.entity.Article">
+    	<id column="t_article_id" jdbcType="BIGINT" property="tArticleId" />
+    	<result column="article_id" jdbcType="VARCHAR" property="articleId" />
+    	<result column="media_type" jdbcType="TINYINT" property="mediaType" />
+    	<result column="p_label_id" jdbcType="TINYINT" property="pLabelId" />
+    	<result column="pub_date" jdbcType="TIMESTAMP" property="pubDate" />
+    	<result column="pub_time" jdbcType="TIMESTAMP" property="pubTime" />
+    	<result column="author" jdbcType="VARCHAR" property="author" />
+    	<result column="source" jdbcType="VARCHAR" property="source" />
+    	<result column="grade" jdbcType="TINYINT" property="grade" />
+    	<result column="sentiment" jdbcType="TINYINT" property="sentiment" />
+    	<result column="recommend_index" jdbcType="TINYINT" property="recommendIndex" />
+    	<result column="title" jdbcType="VARCHAR" property="title" />
+    	<result column="url" jdbcType="VARCHAR" property="url" />
+    	<result column="summary" jdbcType="VARCHAR" property="summary" />
+    	<result column="senti_sentences" jdbcType="VARCHAR" property="sentiSentences" />
+    	<result column="senti_sentences_show" jdbcType="VARCHAR" property="sentiSentencesShow" />
+    	<result column="authorized_area" jdbcType="VARCHAR" property="authorizedArea" />
+    	<result column="if_zhaowen" jdbcType="TINYINT" property="ifZhaowen" />
+    	<result column="if_from_oa" jdbcType="TINYINT" property="ifFromOa" />
+    	<result column="entity_level" jdbcType="VARCHAR" property="entityLevel" />
+    	<result column="if_report" jdbcType="TINYINT" property="ifReport" />
+    	<result column="point_of_view" jdbcType="VARCHAR" property="pointOfView" />
+    	<result column="field" jdbcType="VARCHAR" property="field" />
+    	<result column="entrepreneur" jdbcType="VARCHAR" property="entrepreneur" />
+    	<result column="trust_level" jdbcType="TINYINT" property="trustLevel" />
+    	<result column="type_of_content" jdbcType="VARCHAR" property="typeOfContent" />
+    	<result column="if_show" jdbcType="TINYINT" property="ifShow" />
+    	<result column="if_part_stick" jdbcType="TINYINT" property="ifPartStick" />
+    	<result column="if_all_stick" jdbcType="TINYINT" property="ifAllStick" />
+    	<result column="if_stick" jdbcType="TINYINT" property="ifStick" />
+    	<result column="stick_update_time" jdbcType="TIMESTAMP" property="stickUpdateTime" />
+    	<result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+		<result column="topic_img_url" jdbcType="VARCHAR" property="topicImgUrl" />
+    	<result column="oa_importance" jdbcType="VARCHAR" property="oaImportance" />
+    	<result column="content_quality" jdbcType="FLOAT" property="contentQuality" />
+    	<result column="if_recommend" jdbcType="TINYINT" property="ifRecommend" />
+    	<result column="order_num" jdbcType="TINYINT" property="orderNum" />
+    	<result column="create_operator" jdbcType="VARCHAR" property="createOperator" />
+    	<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    	<result column="update_operator" jdbcType="VARCHAR" property="updateOperator" />
+    	<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    	<result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+  	</resultMap>
+  	<sql id="Base_Column_List">
+    	t_article_id,
+    	article_id,
+    	media_type,
+    	p_label_id,
+    	pub_date,
+    	pub_time,
+    	author,
+    	source,
+    	grade,
+    	sentiment,
+    	recommend_index,
+    	title,
+    	url,
+    	summary,
+    	senti_sentences,
+    	senti_sentences_show,
+    	authorized_area,
+    	if_zhaowen,
+    	if_from_oa,
+    	entity_level,
+    	if_report,
+    	point_of_view,
+    	field,
+    	entrepreneur,
+    	trust_level,
+    	type_of_content,
+    	if_show,
+    	if_part_stick,
+    	if_all_stick,
+    	if_stick,
+    	img_url,
+    	topic_img_url,
+    	oa_importance,
+    	content_quality,
+    	if_recommend,
+    	stick_update_time,
+    	order_num,
+    	create_operator,
+    	create_time,
+    	update_operator,
+    	update_time,
+    	is_delete
+  	</sql>
+	<sql id="Sticky_list">
+		t_article_id as tArticleId,
+		a.article_id as articleId,
+		media_type as mediaType,
+		pub_date as pubDate,
+		pub_time as pubTime,
+		author,
+		source,
+		grade,
+		sentiment,
+		title,
+		url,
+		summary,
+		senti_sentences as sentiSentences,
+		senti_sentences_show as sentiSentencesShow,
+		if_from_oa as ifFromOa,
+		entity_level as entityLevel,
+		if_show as ifShow,
+		if_part_stick as ifPartStick,
+		if_all_stick as ifAllStick,
+		img_url as imgUrl,
+		stick_update_time as stickUpdateTime,
+		ae.order_num as orderNum,
+		a.create_operator as createOperator,
+		a.create_time as createTime,
+		a.update_operator as updateOperator,
+		a.update_time as updateTime,
+		a.is_delete as isDelete
+	</sql>
+    <sql id="Preview_column_map">
+        distinct a.article_id as articleId,
+        a.t_article_id,
+        media_type as mediaType,
+        url,
+        pub_date as pubDate,
+        pub_time as pubTime,
+        author,
+        source,
+        trust_level as trustLevel,
+        sentiment,
+        title,
+        type_of_content as typeOfContent,
+        if_show as ifShow,
+        img_url as imgUrl,
+        topic_img_url as topicImgUrl,
+        (case when view_num is null then 0 else view_num end) as viewCount,
+        if_stick as ifStick,
+        if_all_stick as ifAllStick,
+        if_part_stick as ifPartStick,
+        a.update_time as updateTime,
+		a.create_time as createTime,
+        ast.view_num,
+		oa_importance as oaImportance,
+		content_quality as contentQuality,
+		if_recommend as ifRecommend,
+		a.order_num as orderNum
+    </sql>
+	<sql id="Sort_column_map">
+		DISTINCT
+		a.t_article_id as tArticleId,
+		a.article_id as articleId,
+		a.media_type as mediaType,
+		a.p_label_id as pLabelId,
+		a.pub_date as pubDate,
+		a.pub_time as pubTime,
+		a.author as author,
+		a.source as source,
+		a.grade as grade,
+		a.sentiment as sentiment,
+		a.recommend_index as recommendIndex,
+		a.title as title,
+		a.url as url,
+		a.summary as summary,
+		a.senti_sentences as sentiSences,
+		a.senti_sentences_show as sentiSentencesShow,
+		a.authorized_area as authorizedArea,
+		a.if_zhaowen as ifZhaowen,
+		a.if_from_oa as ifFromOa,
+		a.entity_level as entityLevel,
+		a.if_report as ifReport,
+		a.point_of_view as pointOfView,
+		a.field as field,
+		a.entrepreneur as entrepreneur,
+		a.trust_level as trustLevel,
+		a.type_of_content as typeOfContent,
+		a.if_show as ifShow,
+		a.if_part_stick as ifPartStick,
+		a.if_all_stick as ifAllStick,
+		a.if_stick as ifStick,
+		a.img_url as imgUrl,
+		a.stick_update_time as stickUpdateTime,
+		a.order_num as orderNum,
+		a.create_operator as createOperator,
+		a.create_time as createTime,
+		a.update_operator as updateOperator,
+		a.update_time as updateTime,
+		a.is_delete as isDelete,
+		r.order_num
+	</sql>
+    <sql id = "query_by_condition">
+        <if test="articleId != null">
+            AND a.article_id in
+            <foreach collection="articleId" index="index" item="titleId" open="(" separator="," close=")">
+                #{titleId}
+            </foreach>
+        </if>
+        <if test="dateFrom != null">
+            AND pub_time >= #{dateFrom}
+        </if>
+        <if test="dateTo != null">
+            AND #{dateTo} > pub_time
+        </if>
+        <if test="item != null">
+            <if test="item.ifShowStatList != null and item.ifShowStatList.size > 0">
+                AND a.if_show in
+                <foreach collection="item.ifShowStatList" index="index" item="ifShowItem" open="(" separator="," close=")">
+                    #{ifShowItem}
+                </foreach>
+            </if>
+            <if test="item.sentimentStatList != null and item.sentimentStatList.size > 0">
+                AND a.sentiment in
+                <foreach collection="item.sentimentStatList" index="index" item="sentimentItem" open="(" separator="," close=")">
+                    #{sentimentItem}
+                </foreach>
+            </if>
+        </if>
+    </sql>
+
+    <select id="getAllArticleViaJoin" resultType="com.cmft.slas.cmuop.vo.AllArticlePreview">
+        SELECT
+		<choose>
+			<when test="columnType != '' and columnType != '' and entityType != null and entityType != ''">
+				<include refid="Preview_column_map"></include>,
+				ae.order_num as sortNum
+			</when>
+			<otherwise>
+				<include refid="Preview_column_map"></include>
+			</otherwise>
+		</choose>
+        FROM t_article a
+		<if test="(columnType != '' and columnType != null) or (entityType != '' and entityType != null)">
+			LEFT JOIN t_article_related_entity ae ON a.article_id = ae.article_id
+		</if>
+        LEFT JOIN t_article_statistic ast ON a.article_id = ast.article_id
+        WHERE 1 = 1
+        <include refid="query_by_condition"></include>
+		<if test="columnType != null and columnType != ''">
+			AND ae.column_type = #{columnType}
+		</if>
+		<if test="entityType != null and entityType != ''">
+			AND ae.entity_code = #{entityType}
+		</if>
+		<if test="ifStick != null">
+			AND a.if_stick = #{ifStick}
+		</if>
+		<choose>
+			<when test="entityType != null and entityType != '' and columnType != null and columnType != ''">
+				<choose>
+					<when test="columnType == 0">
+						<choose>
+							<when test="sort != null and sort != ''">
+								order by ${sort}, if_all_stick desc, if_part_stick desc, ae.order_num, t_article_id desc
+							</when>
+							<otherwise>
+								order by if_all_stick desc, if_part_stick desc, ae.order_num, t_article_id desc
+							</otherwise>
+						</choose>
+					</when>
+					<otherwise>
+						<choose>
+							<when test="sort != null and sort != ''">
+								order by ${sort}, if_all_stick desc, if_part_stick desc, ae.order_num, a.pub_time desc
+							</when>
+							<otherwise>
+								order by if_all_stick desc, if_part_stick desc, ae.order_num, a.pub_time desc
+							</otherwise>
+						</choose>
+					</otherwise>
+				</choose>
+			</when>
+			<otherwise>
+				<choose>
+					<when test="sort != null and sort != ''">
+						order by ${sort}, if_all_stick desc, if_part_stick desc, t_article_id desc
+					</when>
+					<otherwise>
+						order by if_all_stick desc, if_part_stick desc, t_article_id desc
+					</otherwise>
+				</choose>
+			</otherwise>
+		</choose>
+    </select>
+
+    <select id="getSelectedViaJoin" resultType="com.cmft.slas.cmuop.vo.SelectedPreview">
+        SELECT
+        <include refid="Preview_column_map"></include>
+        FROM t_article a
+        LEFT JOIN t_article_statistic ast ON a.article_id = ast.article_id
+            WHERE a.if_from_oa = true
+        <if test="articleId != null">
+            AND a.article_id in
+            <foreach collection="articleId" index="index" item="titleId" open="(" separator="," close=")">
+                #{titleId}
+            </foreach>
+        </if>
+        <if test="dateFrom != null">
+            AND pub_time >= #{dateFrom}
+        </if>
+        <if test="dateTo != null">
+            AND #{dateTo} > pub_time
+        </if>
+        <choose>
+            <when test="sort != null and sort != ''">
+                order by ${sort}, if_stick desc, t_article_id desc
+            </when>
+            <otherwise>
+                order by if_stick desc, t_article_id desc
+            </otherwise>
+        </choose>
+    </select>
+    
+    <select id="getArticleByArticleId" resultType="com.cmft.slas.cmuop.entity.Article" parameterType="java.lang.String">
+    	SELECT
+    	<include refid="Base_Column_List"></include>
+    	FROM t_article
+    	WHERE article_id = #{articleId}
+    </select>
+
+    <select id="countIfshow" resultType="com.cmft.slas.cmuop.dto.CountDTO">
+        SELECT
+        count(distinct(a.article_id)) as count,
+        a.if_show as code
+        FROM t_article a
+        WHERE 1 = 1
+        <include refid="query_by_condition"></include>
+        group by if_show
+    </select>
+
+    <select id="countEntityArticle" resultType="com.cmft.slas.cmuop.vo.InfoStatVO">
+        SELECT
+        count(distinct(a.article_id)) as count,
+        ae.entity_code as code
+        FROM t_article a
+        RIGHT JOIN t_article_related_entity ae ON a.article_id = ae.article_id and ae.column_type != '0'
+        WHERE 1 = 1
+        <include refid="query_by_condition"></include>
+        group by ae.entity_code
+    </select>
+
+    <select id="countTypeArticle" resultType="com.cmft.slas.cmuop.vo.InfoStatVO">
+        SELECT
+        count(distinct(a.article_id)) as count,
+        ae.column_type as code
+        FROM t_article a
+        LEFT JOIN t_article_related_entity ae ON a.article_id = ae.article_id
+        WHERE 1 = 1
+        <include refid="query_by_condition"></include>
+        group by ae.column_type
+    </select>
+
+    <select id="countSentimentArticle" resultType="com.cmft.slas.cmuop.dto.CountDTO">
+        SELECT
+        count(distinct(a.article_id)) as count,
+        a.sentiment as code
+        FROM t_article a
+        LEFT JOIN t_article_related_entity ae ON a.article_id = ae.article_id
+        WHERE 1 = 1
+        <include refid="query_by_condition"></include>
+        group by a.sentiment
+    </select>
+
+    <select id="selectArticleListForCarousels" resultMap="BaseResultMap">
+	  	SELECT 
+	  	<include refid="Base_Column_List" />
+	  	FROM t_article
+	  	WHERE is_delete = 0
+	  	AND if_stick = 1
+	  	AND if_show = 1
+  	</select>
+  	
+  	<select id="selectArticleListByType" resultType="com.cmft.slas.cmuop.dto.ArticleForSortDTO">
+	  	SELECT DISTINCT
+	  		a.t_article_id as tArticleId,
+    		a.article_id as articleId,
+    		a.media_type as mediaType,
+    		a.p_label_id as pLabelId,
+    		a.pub_date as pubDate,
+    		a.pub_time as pubTime,
+    		a.author as author,
+    		a.source as source,
+    		a.grade as grade,
+    		a.sentiment as sentiment,
+    		a.recommend_index as recommendIndex,
+    		a.title as title,
+    		a.url as url,
+    		a.summary as summary,
+    		a.senti_sentences as sentiSences,
+    		a.senti_sentences_show as sentiSentencesShow,
+    		a.authorized_area as authorizedArea,
+    		a.if_zhaowen as ifZhaowen,
+    		a.if_from_oa as ifFromOa,
+    		a.entity_level as entityLevel,
+    		a.if_report as ifReport,
+    		a.point_of_view as pointOfView,
+    		a.field as field,
+    		a.entrepreneur as entrepreneur,
+    		a.trust_level as trustLevel,
+    		a.type_of_content as typeOfContent,
+    		a.if_show as ifShow,
+    		a.if_part_stick as ifPartStick,
+    		a.if_all_stick as ifAllStick,
+    		a.if_stick as ifStick,
+    		a.img_url as imgUrl,
+    		a.stick_update_time as stickUpdateTime,
+    		a.order_num as orderNum,
+    		a.create_operator as createOperator,
+    		a.create_time as createTime,
+    		a.update_operator as updateOperator,
+    		a.update_time as updateTime,
+    		a.is_delete as isDelete
+	  	FROM t_article a
+	  	LEFT JOIN t_article_related_entity ae ON
+	  		a.article_id = ae.article_id
+	  	WHERE a.is_delete = 0
+	  	AND a.if_show = 1
+		AND a.if_recommend = 1
+	  	<if test="offset != null">
+	  		AND a.pub_time &lt; #{offset}
+	  	</if>
+	  	<include refid="entity_condition"></include>
+		AND ae.column_type != '0'
+		AND ae.column_type != '3'
+	  	AND a.pub_time &gt;= date_sub(curdate(), interval 14 day)
+	  	ORDER BY a.pub_time DESC
+	  	LIMIT #{M}
+  	</select>
+
+	<sql id = "entity_condition">
+		<if test="entityType != null">
+			AND ae.entity_code = #{entityType}
+		</if>
+	</sql>
+  	
+  	<select id="selectArticleListForSort" resultType="com.cmft.slas.cmuop.dto.ArticleForSortDTO">
+	  	SELECT 
+	  	<include refid="Base_Column_List" />
+	  	FROM t_article
+	  	WHERE is_delete = 0
+	  	AND if_show = 1
+	  	ORDER BY t_article_id
+	  	LIMIT #{M}
+  	</select>
+  	
+  	<select id="selectStickArticleList" resultType="com.cmft.slas.cmuop.dto.ArticleForSortDTO">
+      	SELECT 
+      	<include refid="Sticky_list" />
+      	FROM t_article a
+		LEFT JOIN t_article_related_entity ae ON a.article_id = ae.article_id
+	  	WHERE a.is_delete = 0
+		AND ae.column_type = '0'
+	  	AND a.if_show = 1
+		AND ae.entity_code = #{entityType}
+		AND if_all_stick = 1
+	  	ORDER BY ae.order_num
+  	</select>
+
+	<select id="selectStickArticleListForCard" resultType="com.cmft.slas.cmuop.dto.ArticleForSortDTO">
+		SELECT
+		<include refid="Sticky_list" />
+		FROM t_article a
+		LEFT JOIN t_article_related_entity ae ON a.article_id = ae.article_id
+		WHERE a.is_delete = 0
+		AND ae.column_type = '0'
+		AND a.if_show = 1
+		AND ae.entity_code = #{entityType}
+		AND if_all_stick = 1
+		ORDER BY ae.order_num
+		LIMIT 3
+	</select>
+
+	<select id="selectMuteSticks" resultType="com.cmft.slas.cmuop.dto.ArticleForSortDTO">
+		SELECT
+		<include refid="Sticky_list" />
+		FROM t_article a
+		LEFT JOIN t_article_related_entity ae ON a.article_id = ae.article_id
+		WHERE a.is_delete = 0
+		AND ae.column_type = '0'
+		AND a.if_show = 1
+		AND ae.entity_code = #{entityType}
+		AND if_all_stick = 0
+		AND ae.order_num != 99
+		ORDER BY ae.order_num
+	</select>
+
+	<select id="selectMuteSticksForCard" resultType="com.cmft.slas.cmuop.dto.ArticleForSortDTO">
+		SELECT
+		<include refid="Sticky_list" />
+		FROM t_article a
+		LEFT JOIN t_article_related_entity ae ON a.article_id = ae.article_id
+		WHERE a.is_delete = 0
+		AND ae.column_type = '0'
+		AND a.if_show = 1
+		AND ae.entity_code = #{entityType}
+		AND if_all_stick = 0
+		AND ae.order_num != 99
+		ORDER BY ae.order_num
+		LIMIT #{limit}
+	</select>
+  	
+  	<select id="selectColumnArticle" resultType="com.cmft.slas.cmuop.dto.ArticleForSortDTO">
+	  	SELECT
+		<include refid="Sort_column_map"></include>
+	  	FROM t_article a
+	  	LEFT JOIN t_article_related_entity r ON
+	  		a.article_id = r.article_id
+	  	WHERE a.is_delete = 0
+	  	AND a.if_show = 1
+		AND r.order_num = 99
+		AND a.if_part_stick = 0
+		<if test="columnType !=null">
+			AND r.column_type = #{columnType}
+		</if>
+	  	<if test="entityType != null">
+	  		AND r.entity_code = #{entityType}
+	  	</if>
+	  	<if test="sentimentType != null">
+	  		AND a.sentiment = #{sentimentType}
+	  	</if>
+	  	<if test="offset != null">
+	  		AND #{offset} > a.pub_time 
+	  	</if>
+  		<if test="list != null and list.size>0">
+  			AND a.article_id not in
+  			<foreach collection="list" index="index" item="articleId" open="(" separator="," close=")">
+  			#{articleId}
+  			</foreach>
+  		</if>
+  		ORDER BY a.pub_time DESC
+  		<if test="M != null">
+  			LIMIT #{M}
+  		</if>
+  	</select>
+  	
+  	<select id="selectOrderArticle" resultType="com.cmft.slas.cmuop.dto.ArticleForSortDTO">
+	  	SELECT DISTINCT
+	  		a.t_article_id as tArticleId,
+    		a.article_id as articleId,
+    		a.media_type as mediaType,
+    		a.p_label_id as pLabelId,
+    		a.pub_date as pubDate,
+    		a.pub_time as pubTime,
+    		a.author as author,
+    		a.source as source,
+    		a.grade as grade,
+    		a.sentiment as sentiment,
+    		a.recommend_index as recommendIndex,
+    		a.title as title,
+    		a.url as url,
+    		a.summary as summary,
+    		a.senti_sentences as sentiSences,
+    		a.senti_sentences_show as sentiSentencesShow,
+    		a.authorized_area as authorizedArea,
+    		a.if_zhaowen as ifZhaowen,
+    		a.if_from_oa as ifFromOa,
+    		a.entity_level as entityLevel,
+    		a.if_report as ifReport,
+    		a.point_of_view as pointOfView,
+    		a.field as field,
+    		a.entrepreneur as entrepreneur,
+    		a.trust_level as trustLevel,
+    		a.type_of_content as typeOfContent,
+    		a.if_show as ifShow,
+    		a.if_part_stick as ifPartStick,
+    		a.if_all_stick as ifAllStick,
+    		a.if_stick as ifStick,
+    		a.img_url as imgUrl,
+    		a.stick_update_time as stickUpdateTime,
+    		a.order_num as orderNum,
+    		a.create_operator as createOperator,
+    		a.create_time as createTime,
+    		a.update_operator as updateOperator,
+    		a.update_time as updateTime,
+    		a.is_delete as isDelete,
+    		r.order_num
+	  	FROM t_article a
+	  	LEFT JOIN t_article_related_entity r ON
+	  		a.article_id = r.article_id
+	  	WHERE a.is_delete = 0
+	  	AND a.if_show = 1
+	  	AND r.order_num != 99
+	  	AND a.if_part_stick = 0
+	  	<if test="columnType !=null">
+			AND r.column_type = #{columnType}
+		</if>
+	  	<if test="entityType != null">
+	  		AND r.entity_code = #{entityType}
+	  	</if>
+	  	<if test="sentimentType != null">
+	  		AND a.sentiment = #{sentimentType}
+	  	</if>
+		<if test='columnType == "1" and lastDate != null'>
+			AND to_days(pub_time) = to_days(#{lastDate})
+		</if>
+  		<if test="list != null and list.size>0">
+  			AND a.article_id not in
+  			<foreach collection="list" index="index" item="articleId" open="(" separator="," close=")">
+  			#{articleId}
+  			</foreach>
+  		</if>
+		<choose>
+			<when test='columnType == "1"'>
+				ORDER BY to_days(a.pub_time) DESC, r.order_num ASC,a.pub_time DESC
+			</when>
+			<otherwise>
+				ORDER BY r.order_num ASC,a.pub_time DESC
+			</otherwise>
+		</choose>
+  	</select>
+  	
+  	<select id="getRecommendNum" resultType="java.lang.Integer">
+  		SELECT COUNT(1) 
+  		FROM t_article
+  		WHERE if_recommend=1
+  	</select>
+  	
+  	<select id="selectColumnStickArticle" resultType="com.cmft.slas.cmuop.dto.ArticleForSortDTO">
+	  	SELECT
+		<include refid="Sort_column_map"></include>
+	  	FROM t_article a
+	  	LEFT JOIN t_article_related_entity r ON
+	  		a.article_id = r.article_id
+	  	WHERE a.is_delete = 0
+	  	AND a.if_show = 1
+	  	AND a.if_part_stick = 1
+	  	<if test="columnType !=null">
+			AND r.column_type = #{columnType}
+		</if>
+	  	<if test="entityType != null">
+	  		AND r.entity_code = #{entityType}
+	  	</if>
+	  	<if test="sentimentType != null">
+	  		AND a.sentiment = #{sentimentType}
+	  	</if>
+  		<if test="list != null and list.size>0">
+  			AND a.article_id not in
+  			<foreach collection="list" index="index" item="articleId" open="(" separator="," close=")">
+  			#{articleId}
+  			</foreach>
+  		</if>
+	  		ORDER BY r.order_num ASC,a.pub_time DESC
+  	</select>
+
+	<select id="getDistinctPubTimeInDate" resultType="java.util.Date">
+		SELECT DISTINCT
+			from_days(to_days(a.pub_time)) as pos
+		FROM t_article a
+		LEFT JOIN t_article_related_entity ae ON a.article_id = ae.article_id
+		WHERE to_days(a.pub_time) &lt; to_days(#{lastPosition})
+		AND ae.column_type = '1'
+		AND ae.entity_code = #{entityCode}
+		ORDER BY pos DESC
+		LIMIT ${limit}
+	</select>
+
+	<select id="selectLeaderArticleWithCursor" resultType="com.cmft.slas.cmuop.dto.ArticleForSortDTO">
+		SELECT
+		<include refid="Sort_column_map"></include>
+		FROM t_article a
+		LEFT JOIN t_article_related_entity r ON
+		a.article_id = r.article_id
+		WHERE a.is_delete = 0
+		AND a.if_part_stick = false
+		AND r.column_type = '1'
+		AND r.entity_code = #{entityCode}
+		AND a.if_show = true
+		AND a.is_delete = false
+		<if test="sentiment != null">
+			AND a.sentiment = #{sentiment}
+		</if>
+		<if test="pubTime != null and pubTime != '' and orderNum != null">
+			AND (
+			(to_days(a.pub_time) = to_days(#{pubTime}) AND r.order_num = #{orderNum} AND a.pub_time &lt; #{pubTime})
+			OR(to_days(a.pub_time) = to_days(#{pubTime}) AND r.order_num &gt; #{orderNum})
+			OR(to_days(a.pub_time) &lt; to_days(#{pubTime}))
+			)
+		</if>
+		<if test="unlikes != null and unlikes.size>0">
+			AND a.article_id not in
+			<foreach collection="unlikes" index="index" item="articleId" open="(" separator="," close=")">
+				#{articleId}
+			</foreach>
+		</if>
+		ORDER BY to_days(a.pub_time) DESC, r.order_num ASC,a.pub_time DESC
+		LIMIT #{pageSize}
+	</select>
+  	
+</mapper>

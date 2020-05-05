@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmft.slas.cmuop.mapper.EntityRelatedMapper">
+    <resultMap id="BaseResultMap" type="com.cmft.slas.cmuop.entity.EntityRelated">
+        <id column="entity_related_id" jdbcType="BIGINT" property="entityRelatedId"/>
+        <result column="entity_code" jdbcType="VARCHAR" property="entityCode"/>
+        <result column="related_entity_code" jdbcType="VARCHAR" property="relatedEntityCode"/>
+        <result column="is_valid" jdbcType="TINYINT" property="isValid"/>
+        <result column="create_operator" jdbcType="VARCHAR" property="createOperator"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_operator" jdbcType="VARCHAR" property="updateOperator"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        entity_related_id,
+        entity_code,
+        related_entity_code,
+        is_valid,
+        create_operator,
+        create_time,
+        update_operator,
+        update_time
+    </sql>
+    <resultMap id="ExtendResultMap" extends="BaseResultMap"
+               type="com.cmft.slas.cmuop.dto.EntityRelatedDTO">
+    </resultMap>
+
+    <sql id="pageQueryCond">
+        <if test="entityCode != null">
+            and entity_code = #{entityCode,jdbcType=VARCHAR}
+        </if>
+        <if test="relatedEntityCode != null">
+            and related_entity_code = #{relatedEntityCode,jdbcType=VARCHAR}
+        </if>
+        <if test="isValid != null">
+            and is_valid = #{isValid,jdbcType=TINYINT}
+        </if>
+        <if test="createOperator != null">
+            and create_operator = #{createOperator,jdbcType=VARCHAR}
+        </if>
+        <if test="updateOperator != null">
+            and update_operator = #{updateOperator,jdbcType=VARCHAR}
+        </if>
+        <if test="isDelete != null">
+            and is_delete = #{isDelete,jdbcType=TINYINT}
+        </if>
+    </sql>
+    <select id="queryByCondition" resultMap="BaseResultMap"
+            parameterType="com.cmft.slas.cmuop.dto.EntityRelatedDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_entity_related WHERE 1 = 1 and is_delete = 0
+        <include refid="pageQueryCond"/>
+    </select>
+
+    <select id="countByCondition" resultType="java.lang.Long"
+            parameterType="com.cmft.slas.cmuop.dto.EntityRelatedDTO">
+        SELECT COUNT(1) FROM t_entity_related WHERE 1 = 1 and is_delete = 0
+        <include refid="pageQueryCond"/>
+    </select>
+
+    <select id="queryEntityRelatedList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_entity_related
+        WHERE is_delete = 0
+    </select>
+</mapper>

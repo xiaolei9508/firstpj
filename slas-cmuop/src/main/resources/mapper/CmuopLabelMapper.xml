@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmft.slas.cmuop.mapper.CmuopLabelMapper">
+    <resultMap id="BaseResultMap" type="com.cmft.slas.cmuop.entity.CmuopLabel">
+        <id column="label_id" jdbcType="BIGINT" property="labelId"/>
+        <result column="label_name" jdbcType="VARCHAR" property="labelName"/>
+        <result column="label_code" jdbcType="VARCHAR" property="labelCode"/>
+        <result column="parent_code" jdbcType="VARCHAR" property="parentCode"/>
+        <result column="label_type" jdbcType="VARCHAR" property="labelType"/>
+        <result column="belonged_entity_id" jdbcType="VARCHAR" property="belongedEntityId"/>
+        <result column="search_words" jdbcType="VARCHAR" property="searchWords"/>
+        <result column="is_valid" jdbcType="TINYINT" property="isValid"/>
+        <result column="create_operator" jdbcType="VARCHAR" property="createOperator"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_operator" jdbcType="VARCHAR" property="updateOperator"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_delete" jdbcType="TINYINT" property="isDelete"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        label_id,
+        label_name,
+        label_code,
+        parent_code,
+        label_type,
+        belonged_entity_id,
+        search_words,
+        is_valid,
+        create_operator,
+        create_time,
+        update_operator,
+        update_time,
+        is_delete
+    </sql>
+    <resultMap id="ExtendResultMap" extends="BaseResultMap"
+               type="com.cmft.slas.cmuop.dto.CmuopLabelDTO">
+    </resultMap>
+
+    <sql id="pageQueryCond">
+        <if test="labelName != null">
+            and label_name = #{labelName,jdbcType=VARCHAR}
+        </if>
+        <if test="labelCode != null">
+            and label_code = #{labelCode,jdbcType=VARCHAR}
+        </if>
+        <if test="parentCode != null">
+            and parent_code = #{parentCode,jdbcType=VARCHAR}
+        </if>
+        <if test="labelType != null">
+            and label_type = #{labelType,jdbcType=VARCHAR}
+        </if>
+        <if test="belongedEntityId != null">
+            and belonged_entity_id = #{belongedEntityId,jdbcType=VARCHAR}
+        </if>
+        <if test="searchWords != null">
+            and search_words = #{searchWords,jdbcType=VARCHAR}
+        </if>
+        <if test="isValid != null">
+            and is_valid = #{isValid,jdbcType=TINYINT}
+        </if>
+        <if test="createOperator != null">
+            and create_operator = #{createOperator,jdbcType=VARCHAR}
+        </if>
+        <if test="updateOperator != null">
+            and update_operator = #{updateOperator,jdbcType=VARCHAR}
+        </if>
+        <if test="isDelete != null">
+            and is_delete = #{isDelete,jdbcType=TINYINT}
+        </if>
+    </sql>
+    <select id="queryByCondition" resultMap="BaseResultMap"
+            parameterType="com.cmft.slas.cmuop.dto.CmuopLabelDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_cmuop_label WHERE 1 = 1 and is_delete = 0
+        <include refid="pageQueryCond"/>
+    </select>
+
+    <select id="queryCmuopLabelById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_cmuop_label WHERE 1 = 1 and is_delete = 0
+        <if test="id != null">
+            and label_id = #{id,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <select id="countByCondition" resultType="java.lang.Long"
+            parameterType="com.cmft.slas.cmuop.dto.CmuopLabelDTO">
+        SELECT COUNT(1) FROM t_cmuop_label WHERE 1 = 1 and is_delete = 0
+        <include refid="pageQueryCond"/>
+    </select>
+
+    <select id="queryCmuopLabelList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_cmuop_label
+        WHERE is_delete = 0
+    </select>
+
+    <update id="updateSelective" parameterType="com.cmft.slas.cmuop.dto.CmuopLabelDTO">
+        update t_cmuop_label
+        <trim prefix="set" suffixOverrides=",">
+            <if test="labelName!=null">label_name=#{labelName},</if>
+            <if test="labelCode!=null">label_code=#{labelCode},</if>
+            <if test="parentCode!=null">parent_code=#{parentCode},</if>
+            <if test="labelType!=null">label_type=#{labelType},</if>
+            <if test="searchWords!=null">search_words=#{searchWords},</if>
+            <if test="belongedEntityId!=null">belonged_entity_id=#{belongedEntityId},</if>
+            <if test="isValid!=null">is_valid=#{isValid},</if>
+        </trim>
+        WHERE label_id=#{labelId}
+    </update>
+</mapper>

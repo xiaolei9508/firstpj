@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmft.slas.cmuop.mapper.StockstatusMapper">
+	<resultMap id="BaseResultMap" type="com.cmft.slas.cmuop.entity.Stockstatus">
+    	<id column="t_stock_status_id" jdbcType="BIGINT" property="tStockStatusId" />
+    	<result column="stock_code" jdbcType="VARCHAR" property="stockCode" />
+    	<result column="stock_type" jdbcType="VARCHAR" property="stockType" />
+    	<result column="stock_name" jdbcType="VARCHAR" property="stockName" />
+    	<result column="entity_code" jdbcType="VARCHAR" property="entityCode" />
+    	<result column="index" jdbcType="DOUBLE" property="index" />
+    	<result column="growth" jdbcType="DOUBLE" property="growth" />
+    	<result column="sync" jdbcType="TINYINT" property="sync" />
+    	<result column="status" jdbcType="TINYINT" property="status" />
+    	<result column="order_num" jdbcType="TINYINT" property="orderNum" />
+    	<result column="latest_trade_date" jdbcType="TIMESTAMP" property="latestTradeDate" />
+    	<result column="if_show" jdbcType="TINYINT" property="ifShow" />
+    	<result column="create_operator" jdbcType="VARCHAR" property="createOperator" />
+    	<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    	<result column="update_operator" jdbcType="VARCHAR" property="updateOperator" />
+    	<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    	<result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+  	</resultMap>
+	<sql id="Base_Column_List">
+    	t_stock_status_id,
+    	stock_code,
+    	stock_type,
+    	stock_name,
+    	entity_code,
+    	index,
+    	growth,
+    	sync,
+    	status,
+    	order_num,
+    	latest_trade_date,
+    	if_show,
+    	create_operator,
+    	create_time,
+    	update_operator,
+    	update_time,
+    	is_delete
+  	</sql>
+	<resultMap id="ExtendResultMap" extends="BaseResultMap"
+		type="com.cmft.slas.cmuop.dto.StockstatusDTO">
+	</resultMap>
+
+	<sql id="pageQueryCond">
+		<if test="stockCode != null">
+		and stock_code = #{stockCode,jdbcType=VARCHAR}
+		</if>
+		<if test="stockType != null">
+		and stock_type = #{stockType,jdbcType=VARCHAR}
+		</if>
+		<if test="stockName != null">
+		and stock_name = #{stockName,jdbcType=VARCHAR}
+		</if>
+		<if test="entityCode != null">
+		and entity_code = #{entityCode,jdbcType=VARCHAR}
+		</if>
+		<if test="index != null">
+		and index = #{index,jdbcType=DOUBLE}
+		</if>
+		<if test="growth != null">
+		and growth = #{growth,jdbcType=DOUBLE}
+		</if>
+		<if test="sync != null">
+		and sync = #{sync,jdbcType=TINYINT}
+		</if>
+		<if test="status != null">
+		and status = #{status,jdbcType=TINYINT}
+		</if>
+		<if test="orderNum != null">
+		and order_num = #{orderNum,jdbcType=TINYINT}
+		</if>
+		<if test="latestTradeDateRange != null">
+			<if test="latestTradeDateRange.from != null">
+				and latest_trade_date <![CDATA[>=]]>
+				#{latestTradeDateRange.to,jdbcType=TIMESTAMP}
+			</if>
+			<if test="latestTradeDateRange.to != null">
+				and latest_trade_date <![CDATA[<=]]>
+				#{latestTradeDateRange.to,jdbcType=TIMESTAMP}
+			</if>		
+		</if>
+		<if test="ifShow != null">
+		and if_show = #{ifShow,jdbcType=TINYINT}
+		</if>
+		<if test="createOperator != null">
+		and create_operator = #{createOperator,jdbcType=VARCHAR}
+		</if>
+		<if test="createTimeRange != null">
+			<if test="createTimeRange.from != null">
+				and create_time <![CDATA[>=]]>
+				#{createTimeRange.to,jdbcType=TIMESTAMP}
+			</if>
+			<if test="createTimeRange.to != null">
+				and create_time <![CDATA[<=]]>
+				#{createTimeRange.to,jdbcType=TIMESTAMP}
+			</if>		
+		</if>
+		<if test="updateOperator != null">
+		and update_operator = #{updateOperator,jdbcType=VARCHAR}
+		</if>
+		<if test="updateTimeRange != null">
+			<if test="updateTimeRange.from != null">
+				and update_time <![CDATA[>=]]>
+				#{updateTimeRange.to,jdbcType=TIMESTAMP}
+			</if>
+			<if test="updateTimeRange.to != null">
+				and update_time <![CDATA[<=]]>
+				#{updateTimeRange.to,jdbcType=TIMESTAMP}
+			</if>		
+		</if>
+		<if test="isDelete != null">
+		and is_delete = #{isDelete,jdbcType=TINYINT}
+		</if>
+	</sql>
+	<select id="queryByCondition" resultMap="ExtendResultMap"
+		parameterType="com.cmft.slas.cmuop.dto.StockstatusDTO">
+		SELECT
+		<include refid="Base_Column_List"></include>
+		FROM t_stock_status WHERE 1 = 1
+		<include refid="pageQueryCond"></include>
+	</select>
+
+	<select id="countByCondition" resultType="java.lang.Long"
+		parameterType="com.cmft.slas.cmuop.dto.StockstatusDTO">
+		SELECT COUNT(1) FROM t_stock_status WHERE 1 = 1
+		<include refid="pageQueryCond"></include>
+	</select>
+	
+	<select id="queryStockstatusList" resultMap="ExtendResultMap">
+	  	SELECT 
+	  	<include refid="Base_Column_List" />
+	  	FROM t_stock_status
+	  	WHERE is_delete = 0
+	  	ORDER BY t_stock_status_id
+  	</select>
+</mapper>

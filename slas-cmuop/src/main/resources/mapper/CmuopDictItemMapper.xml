@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmft.slas.cmuop.mapper.CmuopDictItemMapper">
+    <resultMap id="BaseResultMap" type="com.cmft.slas.cmuop.entity.CmuopDictItem">
+        <id column="t_dict_item_id" jdbcType="BIGINT" property="tDictItemId"/>
+        <result column="dict_code" jdbcType="VARCHAR" property="dictCode"/>
+        <result column="dict_name" jdbcType="VARCHAR" property="dictName"/>
+        <result column="value" jdbcType="VARCHAR" property="value"/>
+        <result column="text" jdbcType="VARCHAR" property="text"/>
+        <result column="eng_text" jdbcType="VARCHAR" property="engText"/>
+        <result column="sort" jdbcType="TINYINT" property="sort"/>
+        <result column="create_operator" jdbcType="VARCHAR" property="createOperator"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_operator" jdbcType="VARCHAR" property="updateOperator"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        t_dict_item_id,
+        dict_code,
+        dict_name,
+        value,
+        text,
+        eng_text,
+        sort,
+        create_operator,
+        create_time,
+        update_operator,
+        update_time,
+        is_delete
+    </sql>
+    <resultMap id="ExtendResultMap" extends="BaseResultMap"
+               type="com.cmft.slas.cmuop.dto.CmuopDictItemDTO">
+    </resultMap>
+
+    <sql id="pageQueryCond">
+        <if test="dictCode != null">
+            and dict_code = #{dictCode,jdbcType=VARCHAR}
+        </if>
+        <if test="dictName != null">
+            and dict_name = #{dictName,jdbcType=VARCHAR}
+        </if>
+        <if test="value != null">
+            and value = #{value,jdbcType=VARCHAR}
+        </if>
+        <if test="text != null">
+            and text = #{text,jdbcType=VARCHAR}
+        </if>
+        <if test="engText != null">
+            and eng_text = #{engText,jdbcType=VARCHAR}
+        </if>
+        <if test="sort != null">
+            and sort = #{sort,jdbcType=TINYINT}
+        </if>
+        <if test="createOperator != null">
+            and create_operator = #{createOperator,jdbcType=VARCHAR}
+        </if>
+        <if test="updateOperator != null">
+            and update_operator = #{updateOperator,jdbcType=VARCHAR}
+        </if>
+        <if test="isDelete != null">
+            and is_delete = #{isDelete,jdbcType=TINYINT}
+        </if>
+    </sql>
+    <select id="queryByCondition" resultMap="BaseResultMap"
+            parameterType="com.cmft.slas.cmuop.dto.CmuopDictItemDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_cmuop_dict_item WHERE is_delete = 0
+        <include refid="pageQueryCond"/>
+        order by `sort` asc
+    </select>
+
+    <select id="countByCondition" resultType="java.lang.Long"
+            parameterType="com.cmft.slas.cmuop.dto.CmuopDictItemDTO">
+        SELECT COUNT(1) FROM t_cmuop_dict_item WHERE 1 = 1 and is_delete = 0
+        <include refid="pageQueryCond"/>
+    </select>
+
+    <select id="queryCmuopDictItemList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_cmuop_dict_item
+        WHERE is_delete = 0
+        <include refid="pageQueryCond"/>
+    </select>
+</mapper>

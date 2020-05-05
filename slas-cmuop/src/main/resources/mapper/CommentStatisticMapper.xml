@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmft.slas.cmuop.mapper.CommentStatisticMapper">
+	<resultMap id="BaseResultMap" type="com.cmft.slas.cmuop.entity.CommentStatistic">
+    	<id column="comment_statistic_id" jdbcType="BIGINT" property="commentStatisticId" />
+    	<result column="comment_id" jdbcType="BIGINT" property="commentId" />
+    	<result column="like_num" jdbcType="INTEGER" property="likeNum" />
+    	<result column="create_operator" jdbcType="VARCHAR" property="createOperator" />
+    	<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    	<result column="update_operator" jdbcType="VARCHAR" property="updateOperator" />
+    	<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    	<result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+  	</resultMap>
+	<sql id="Base_Column_List">
+    	comment_statistic_id,
+    	comment_id,
+    	like_num,
+    	create_operator,
+    	create_time,
+    	update_operator,
+    	update_time,
+    	is_delete
+  	</sql>
+	<resultMap id="ExtendResultMap" extends="BaseResultMap"
+		type="com.cmft.slas.cmuop.dto.CommentStatisticDTO">
+	</resultMap>
+
+	<sql id="pageQueryCond">
+		<if test="commentId != null">
+		and comment_id = #{commentId,jdbcType=BIGINT}
+		</if>
+		<if test="likeNum != null">
+		and like_num = #{likeNum,jdbcType=INTEGER}
+		</if>
+		<if test="createOperator != null">
+		and create_operator = #{createOperator,jdbcType=VARCHAR}
+		</if>
+		 <if test="createTimeRange != null">
+			<if test="createTimeRange.from != null">
+				and create_time <![CDATA[>=]]>
+				#{createTimeRange.to,jdbcType=TIMESTAMP}
+			</if>
+			<if test="createTimeRange.to != null">
+				and create_time <![CDATA[<=]]>
+				#{createTimeRange.to,jdbcType=TIMESTAMP}
+			</if>
+		</if>
+		<if test="updateOperator != null">
+		and update_operator = #{updateOperator,jdbcType=VARCHAR}
+		</if>
+		 <if test="updateTimeRange != null">
+			<if test="updateTimeRange.from != null">
+				and update_time <![CDATA[>=]]>
+				#{updateTimeRange.to,jdbcType=TIMESTAMP}
+			</if>
+			<if test="updateTimeRange.to != null">
+				and update_time <![CDATA[<=]]>
+				#{updateTimeRange.to,jdbcType=TIMESTAMP}
+			</if>
+		</if>
+		<if test="isDelete != null">
+		and is_delete = #{isDelete,jdbcType=TINYINT}
+		</if>
+	</sql>
+	<select id="queryByCondition" resultMap="BaseResultMap"
+		parameterType="com.cmft.slas.cmuop.dto.CommentStatisticDTO">
+		SELECT
+		<include refid="Base_Column_List"></include>
+		FROM t_comment_statistic WHERE 1 = 1
+		<include refid="pageQueryCond"></include>
+	</select>
+
+	<select id="countByCondition" resultType="java.lang.Long"
+		parameterType="com.cmft.slas.cmuop.dto.CommentStatisticDTO">
+		SELECT COUNT(1) FROM t_comment_statistic WHERE 1 = 1
+		<include refid="pageQueryCond"></include>
+	</select>
+	
+	<select id="queryCommentStatisticList" resultMap="BaseResultMap">
+	  	SELECT 
+	  	<include refid="Base_Column_List" />
+	  	FROM t_comment_statistic
+	  	WHERE is_delete = 0
+	  	ORDER BY comment_statistic_id
+  	</select>
+</mapper>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmft.slas.cmuop.mapper.ArticleAuthorizedEntitiesMapper">
+	<resultMap id="BaseResultMap" type="com.cmft.slas.cmuop.entity.ArticleAuthorizedEntities">
+    	<id column="article_view_id" jdbcType="BIGINT" property="articleViewId" />
+    	<result column="article_id" jdbcType="VARCHAR" property="articleId" />
+    	<result column="entity_code" jdbcType="VARCHAR" property="entityCode" />
+    	<result column="auth_area_id" jdbcType="VARCHAR" property="authAreaId" />
+    	<result column="create_operator" jdbcType="VARCHAR" property="createOperator" />
+    	<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    	<result column="update_operator" jdbcType="VARCHAR" property="updateOperator" />
+    	<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    	<result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+  	</resultMap>
+	<sql id="Base_Column_List">
+    	article_view_id,
+    	article_id,
+    	entity_code,
+    	auth_area_id,
+    	create_operator,
+    	create_time,
+    	update_operator,
+    	update_time,
+    	is_delete
+  	</sql>
+	<resultMap id="ExtendResultMap" extends="BaseResultMap"
+		type="com.cmft.slas.cmuop.dto.ArticleAuthorizedEntitiesDTO">
+	</resultMap>
+
+	<sql id="pageQueryCond">
+		<if test="articleId != null">
+		and article_id = #{articleId,jdbcType=VARCHAR}
+		</if>
+		<if test="entityCode != null">
+		and entity_code = #{entityCode,jdbcType=VARCHAR}
+		</if>
+		<if test="authAreaId != null">
+		and auth_area_id = #{authAreaId,jdbcType=VARCHAR}
+		</if>
+		<if test="createOperator != null">
+		and create_operator = #{createOperator,jdbcType=VARCHAR}
+		</if>
+		 <if test="createTimeRange != null">
+			<if test="createTimeRange.from != null">
+				and create_time <![CDATA[>=]]>
+				#{createTimeRange.to,jdbcType=TIMESTAMP}
+			</if>
+			<if test="createTimeRange.to != null">
+				and create_time <![CDATA[<=]]>
+				#{createTimeRange.to,jdbcType=TIMESTAMP}
+			</if>
+		</if>
+		<if test="updateOperator != null">
+		and update_operator = #{updateOperator,jdbcType=VARCHAR}
+		</if>
+		 <if test="updateTimeRange != null">
+			<if test="updateTimeRange.from != null">
+				and update_time <![CDATA[>=]]>
+				#{updateTimeRange.to,jdbcType=TIMESTAMP}
+			</if>
+			<if test="updateTimeRange.to != null">
+				and update_time <![CDATA[<=]]>
+				#{updateTimeRange.to,jdbcType=TIMESTAMP}
+			</if>
+		</if>
+		<if test="isDelete != null">
+		and is_delete = #{isDelete,jdbcType=TINYINT}
+		</if>
+	</sql>
+	<select id="queryByCondition" resultMap="BaseResultMap"
+		parameterType="com.cmft.slas.cmuop.dto.ArticleAuthorizedEntitiesDTO">
+		SELECT
+		<include refid="Base_Column_List"></include>
+		FROM t_article_authorized_entities WHERE 1 = 1
+		<include refid="pageQueryCond"></include>
+	</select>
+
+	<select id="countByCondition" resultType="java.lang.Long"
+		parameterType="com.cmft.slas.cmuop.dto.ArticleAuthorizedEntitiesDTO">
+		SELECT COUNT(1) FROM t_article_authorized_entities WHERE 1 = 1
+		<include refid="pageQueryCond"></include>
+	</select>
+	
+	<select id="queryArticleAuthorizedEntitiesList" resultMap="BaseResultMap">
+	  	SELECT 
+	  	<include refid="Base_Column_List" />
+	  	FROM t_article_authorized_entities
+	  	WHERE is_delete = 0
+	  	ORDER BY article_view_id
+  	</select>
+</mapper>

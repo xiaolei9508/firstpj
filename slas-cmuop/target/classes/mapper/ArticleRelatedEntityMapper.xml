@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmft.slas.cmuop.mapper.ArticleRelatedEntityMapper">
+	<resultMap id="BaseResultMap" type="com.cmft.slas.cmuop.entity.ArticleRelatedEntity">
+    	<id column="article_entity_id" jdbcType="BIGINT" property="articleEntityId" />
+    	<result column="article_id" jdbcType="VARCHAR" property="articleId" />
+    	<result column="entity_code" jdbcType="VARCHAR" property="entityCode" />
+    	<result column="column_type" jdbcType="VARCHAR" property="columnType" />
+    	<result column="order_num" jdbcType="INTEGER" property="orderNum" />
+    	<result column="create_operator" jdbcType="VARCHAR" property="createOperator" />
+    	<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    	<result column="update_operator" jdbcType="VARCHAR" property="updateOperator" />
+    	<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    	<result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+  	</resultMap>
+	<sql id="Base_Column_List">
+    	article_entity_id,
+    	article_id,
+    	entity_code,
+    	column_type,
+    	order_num,
+    	create_operator,
+    	create_time,
+    	update_operator,
+    	update_time,
+    	is_delete
+  	</sql>
+	<resultMap id="ExtendResultMap" extends="BaseResultMap"
+		type="com.cmft.slas.cmuop.dto.ArticleRelatedEntityDTO">
+	</resultMap>
+
+	<sql id="pageQueryCond">
+		<if test="articleId != null">
+		and article_id = #{articleId,jdbcType=VARCHAR}
+		</if>
+		<if test="entityCode != null">
+		and entity_code = #{entityCode,jdbcType=VARCHAR}
+		</if>
+		<if test="columnType != null">
+		and column_type = #{columnType,jdbcType=VARCHAR}
+		</if>
+		<if test="orderNum != null">
+		and order_num = #{orderNum,jdbcType=INTEGER}
+		</if>
+		<if test="createOperator != null">
+		and create_operator = #{createOperator,jdbcType=VARCHAR}
+		</if>
+		<if test="updateOperator != null">
+		and update_operator = #{updateOperator,jdbcType=VARCHAR}
+		</if>
+		<if test="isDelete != null">
+		and is_delete = #{isDelete,jdbcType=TINYINT}
+		</if>
+	</sql>
+	<select id="queryByCondition" resultMap="BaseResultMap"
+		parameterType="com.cmft.slas.cmuop.dto.ArticleRelatedEntityDTO">
+		SELECT
+		<include refid="Base_Column_List"></include>
+		FROM t_article_related_entity WHERE is_delete = 0
+		<include refid="pageQueryCond"></include>
+	</select>
+
+	<select id="countByCondition" resultType="java.lang.Long"
+		parameterType="com.cmft.slas.cmuop.dto.ArticleRelatedEntityDTO">
+		SELECT COUNT(1) FROM t_article_related_entity WHERE is_delete = 0
+		<include refid="pageQueryCond"></include>
+	</select>
+
+	<select id="getEntityStat" resultType="com.cmft.slas.cmuop.dto.EntitySentimentCountDTO">
+		SELECT
+			sentiment,
+			count(distinct a.article_id) as count
+		FROM t_article_related_entity tare
+		LEFT JOIN t_article a ON tare.article_id = a.article_id
+		WHERE tare.entity_code = #{entityCode}
+		AND a.pub_time >= date_sub(now(), interval #{days} day)
+		AND tare.column_type = '2'
+		AND if_show = 1
+		GROUP BY a.sentiment
+	</select>
+
+	<select id="selectDistinctEntity" resultMap="BaseResultMap"
+			parameterType="com.cmft.slas.cmuop.dto.ArticleRelatedEntityDTO">
+		SELECT
+		DISTINCT article_id, entity_code
+		FROM t_article_related_entity WHERE is_delete = 0
+		and column_type != '0'
+		and column_type != '3'
+		and entity_code != '000'
+		<include refid="pageQueryCond"></include>
+	</select>
+</mapper>

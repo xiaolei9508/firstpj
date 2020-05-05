@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmft.slas.cmuop.mapper.UserCommentMapper">
+	<resultMap id="BaseResultMap" type="com.cmft.slas.cmuop.entity.UserComment">
+    	<id column="comment_id" jdbcType="BIGINT" property="commentId" />
+    	<result column="article_id" jdbcType="VARCHAR" property="articleId" />
+    	<result column="uid" jdbcType="VARCHAR" property="uid" />
+    	<result column="comment" jdbcType="VARCHAR" property="comment" />
+    	<result column="reply_id" jdbcType="BIGINT" property="replyId" />
+    	<result column="is_delete" jdbcType="VARCHAR" property="isDelete" />
+    	<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    	<result column="update_operator" jdbcType="VARCHAR" property="updateOperator" />
+    	<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    	<result column="create_operator" jdbcType="VARCHAR" property="createOperator" />
+  	</resultMap>
+	<sql id="Base_Column_List">
+    	comment_id,
+    	article_id,
+    	uid,
+    	comment,
+    	reply_id,
+    	is_delete,
+    	create_time,
+    	update_operator,
+    	update_time,
+    	create_operator
+  	</sql>
+	<resultMap id="ExtendResultMap" extends="BaseResultMap"
+		type="com.cmft.slas.cmuop.dto.UserCommentDTO">
+		<result column="count" jdbcType="INTEGER" property="count" />
+	</resultMap>
+
+	<sql id="pageQueryCond">
+		<if test="articleId != null">
+		and article_id = #{articleId,jdbcType=VARCHAR}
+		</if>
+		<if test="uid != null">
+		and uid = #{uid,jdbcType=VARCHAR}
+		</if>
+		<if test="comment != null">
+		and comment = #{comment,jdbcType=VARCHAR}
+		</if>
+		<if test="replyId != null">
+		and reply_id = #{replyId,jdbcType=BIGINT}
+		</if>
+		<if test="isDelete != null">
+		and is_delete = #{isDelete,jdbcType=VARCHAR}
+		</if>
+		 <if test="createTimeRange != null">
+			<if test="createTimeRange.from != null">
+				and create_time <![CDATA[>=]]>
+				#{createTimeRange.to,jdbcType=TIMESTAMP}
+			</if>
+			<if test="createTimeRange.to != null">
+				and create_time <![CDATA[<=]]>
+				#{createTimeRange.to,jdbcType=TIMESTAMP}
+			</if>
+		</if>
+		<if test="updateOperator != null">
+		and update_operator = #{updateOperator,jdbcType=VARCHAR}
+		</if>
+		 <if test="updateTimeRange != null">
+			<if test="updateTimeRange.from != null">
+				and update_time <![CDATA[>=]]>
+				#{updateTimeRange.to,jdbcType=TIMESTAMP}
+			</if>
+			<if test="updateTimeRange.to != null">
+				and update_time <![CDATA[<=]]>
+				#{updateTimeRange.to,jdbcType=TIMESTAMP}
+			</if>
+		</if>
+		<if test="createOperator != null">
+		and create_operator = #{createOperator,jdbcType=VARCHAR}
+		</if>
+	</sql>
+	<select id="queryByCondition" resultMap="BaseResultMap"
+		parameterType="com.cmft.slas.cmuop.dto.UserCommentDTO">
+		SELECT
+		<include refid="Base_Column_List"></include>
+		FROM t_user_comment WHERE 1 = 1
+		<include refid="pageQueryCond"></include>
+	</select>
+
+	<select id="countByCondition" resultType="java.lang.Long"
+		parameterType="com.cmft.slas.cmuop.dto.UserCommentDTO">
+		SELECT COUNT(1) FROM t_user_comment WHERE 1 = 1
+		<include refid="pageQueryCond"></include>
+	</select>
+	
+	<select id="queryConferenceList" resultMap="BaseResultMap">
+	  	SELECT 
+	  	<include refid="Base_Column_List" />
+	  	FROM t_user_comment
+	  	WHERE is_delete = 0
+	  	ORDER BY comment_id
+  	</select>
+
+	<select id="queryByArticle" resultMap="ExtendResultMap">
+		SELECT article_id,COUNT(*) AS count FROM t_user_comment
+		WHERE is_delete = 0
+		<if test="previousFireTime != null">
+			and update_time > #{previousFireTime}
+		</if>
+		<if test="fireTime != null">
+			and #{fireTime} > update_time
+		</if>
+		GROUP BY article_id
+
+	</select>
+</mapper>
